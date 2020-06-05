@@ -74,6 +74,7 @@ class Handler(Settings):
             if request.event.object['action']['type'] == 'chat_invite_user':
                 if request.event.object['action']['member_id'] == -self.group_id:
                     AC.onBotJoin(request)
+                    return 'После выдачи прав администратора боту, напишите !обновить'
                 else:
                     return AC.onUserJoin(request)
                 
