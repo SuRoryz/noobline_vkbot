@@ -14,7 +14,7 @@ class ChatKick(Command, Settings):
 
     @classmethod
     def process(cls, request, target=''):
-        target_ = parseTargetFromFWDM(request)
+        target_ = cls.parseTargetFromFWDM(request)
         if target_:
             target = target_
             

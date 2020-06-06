@@ -11,9 +11,16 @@ class AddRole(Command):
     @classmethod
     def process(cls, request, target='', role=''):
         from_id = request.event.object['from_id']
+
+        targetLWRC = ''
+
+        try:
+            targetLWRC = target[0].upper() + target[1:].lower()
+        except:
+            pass
         
-        if target in Permission.levels.keys():
-            role = target
+        if targetLWRC in Permission.levels.keys():
+            role = targetLWRC
 
         target_ = cls.parseTargetFromFWDM(request)
         if target_:
@@ -42,12 +49,14 @@ class AddRole(Command):
             return Samples.COMMAND_ADDROLE_GETROLE.format(role, Samples.getReference(target, request.chat_id))
 
         @cls.checkForPermission(from_id, request.chat_id)
-        def work(target):
+        def work(target, role):
 
+                role = role[0].upper() + role[1:].lower()
+            
                 if role in Permission.levels.keys():
                     Sql.execute(f'update Permissions set role="{role}" where user="{target}"', request.chat_id)
                     return Samples.COMMAND_ADDROLE_SUCCESS.format(role, Samples.getReference(target, request.chat_id))
 
                 return Samples.COMMAND_ADDROLE_INVALIDROLE
 
-        return work(target)
+        return work(target, role)

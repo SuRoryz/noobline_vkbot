@@ -112,7 +112,7 @@ class AdminCommands:
         warn_dict['warns'][target] = 0
         warn_dict = dumps(warn_dict)
         Sql.execute(f"update Admin set warns='{warn_dict}'", request.chat_id)
-        return Samples.ADMIN_WARN_NULL.format(Samples.getReference(target, chat_id))
+        return Samples.ADMIN_WARN_NULL.format(Samples.getReference(target, request.chat_id))
 
     # Кикает цель из беседы. Попутно снимает варны
     @staticmethod

@@ -74,7 +74,7 @@ class Handler(Settings):
             if request.event.object['action']['type'] == 'chat_invite_user':
                 if request.event.object['action']['member_id'] == -self.group_id:
                     AC.onBotJoin(request)
-                    return 'После выдачи прав администратора боту, напишите !обновить'
+                    return 'После выдачи прав администратора боту, напишите !обновить\nЧтобы увидеть помощь, напишите !помощь'
                 else:
                     return AC.onUserJoin(request)
                 
@@ -109,4 +109,5 @@ class Handler(Settings):
                 except TypeError:
                     return Samples.ERR_COMMAND_INVALIDARGUMENT
                 except KeyError as e:
-                    return Samples.ERR_COMMAND_UNKNOWN
+                    return e
+                #Samples.ERR_COMMAND_UNKNOWN
