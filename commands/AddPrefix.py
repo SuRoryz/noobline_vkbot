@@ -7,7 +7,7 @@ from permissions import Permission
 
 class AddPrefix(Command):
 
-    key = 'префикс'
+    key = ('префикс', 'prefix', 'pref', 'преф')
     permissions = 5
 
     @classmethod

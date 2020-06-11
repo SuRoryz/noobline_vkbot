@@ -12,7 +12,7 @@ from random import randint
 
 class GameTrade(Command, Settings):
 
-    key = 'трейд'
+    key = ('трейд', 'trade', 'tr', 'тр')
     permissions = 3
 
     @classmethod

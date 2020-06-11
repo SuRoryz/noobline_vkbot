@@ -32,9 +32,14 @@ from json import loads
 \\=+-        parseTarget -> int           Получает айди пользователя
 /                                           из говна, что ему дали.
 |
+\\=+-      timeDifference -> int         Возвращает форматированую
+/                                             разницу во времени
+|
+\\=+-        parseTime -> str           Возвращает секунды из времени,
+/                                                что ему дали.
+|
 \\=+-        getRole -> tuple              Получает префикс и роль
 /                                                  по айди.
-|
 |
 \==---=-------------+------------- -------  ----   -   -"""
 
@@ -118,6 +123,49 @@ class Command:
                 return int(target)
             except:
                 return target
+
+    # Разница во временеи
+    @classmethod
+    def timeDifference(cls, time1: int, time2: int) -> str:
+        difference = abs(time2-time1)
+
+        d = difference // 86400
+        h = (difference % 86400) // 3600
+        m = (difference % 86400 % 3600) // 60
+        s = difference % 86400 % 3600 % 60
+
+        if m<10:
+            m='0'+str(m)
+        else:
+            m=str(m)
+        if s<10:
+            s='0'+str(s)
+        else:
+            s=str(s)
+        return f'{d}д:{h}ч:{m}м:{s}с'
+
+        
+    # Перевод из формата d h m s в количество секунд
+    @classmethod
+    def parseTime(cls, time: str) -> int:
+        time = time.lower().split()
+        params = {'d': 86400, 'д': 86400,
+                  'h': 3600, 'ч': 3600,
+                  'm': 60, 'м': 60,
+                  's': 1, 'с': 60}
+
+        total = 0
+
+        for arg in time:
+            for param in params.keys():
+                if param in arg:
+                    need = arg.replace(param, '')
+                    if not(need):
+                        need = 0
+                    total += params[param] * int(need)
+
+        return total
+        
 
     # Получаем роль и префикс цели.
     @classmethod

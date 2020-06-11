@@ -6,7 +6,7 @@ from AdminCommands.Admin import AdminCommands as AC
 
 class MoneyBalance(Command):
 
-    key = 'баланс'
+    key = ('баланс', 'balance')
     permissions = 0
 
     @classmethod

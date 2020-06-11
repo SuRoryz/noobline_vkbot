@@ -5,7 +5,7 @@ from permissions import Permission
 
 class SetGreetings(Command):
 
-    key = 'приветствие'
+    key = ('приветствие', 'greeting')
     permissions = 9
 
     @classmethod

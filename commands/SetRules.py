@@ -5,7 +5,7 @@ from permissions import Permission
 
 class SetRules(Command):
 
-    key = 'правила'
+    key = ('правила', 'rules')
     permissions = 9
 
     @classmethod
@@ -13,10 +13,12 @@ class SetRules(Command):
         
         from_id = request.event.object['from_id']
 
+        if not(request.event.object['fwd_messages']):
+                    return Sql.execute("select rules from Admin", request.chat_id)[0][0]
+
         @cls.checkForPermission(from_id, request.chat_id)
         def work():
-                if not(request.event.object['fwd_messages']):
-                    return Sql.execute("select rules from Admin", request.chat_id)[0][0]
+
                 Sql.execute(f"update Admin set rules='{request.event.object['fwd_messages'][0]['text']}'", request.chat_id)
     
                 return Samples.COMMAND_SETGREETING_SUCCESS

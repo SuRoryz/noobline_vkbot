@@ -43,10 +43,11 @@ class Handler(Settings):
             self.commands.append(module)
 
             for command in self.commands:
-                self._keys[eval(f'self.{command}.key')] = command
+                for key in eval(f'self.{command}.key'):
+                    self._keys[key] = command
     
     # Проверка сообщения на команду
-    def isCommand(self, content:str) -> bool:
+    def isCommand(self, content: str) -> bool:
         if content[:len(self.prefix)] == self.prefix:
             return True
         elif any(x in content.split()[0] for x in self.reference):
@@ -67,6 +68,7 @@ class Handler(Settings):
         return content
 
     def handleRequest(self, request: Request) -> str:
+        
         if 'action' in request.event.object:
 
             # Выполняется на при добавлении в беседу - - - -
@@ -76,10 +78,20 @@ class Handler(Settings):
                     AC.onBotJoin(request)
                     return 'После выдачи прав администратора боту, напишите !обновить\nЧтобы увидеть помощь, напишите !помощь'
                 else:
+                    message = AC.onEveryMessage(request)
+
+                    if message:
+                        return message
                     return AC.onUserJoin(request)
                 
             # - - - - - - - - - - - - - - - - - - - - - - - -
 
+            # Думаю, как это сделать по нормальному = = = = =
+            message = AC.onEveryMessage(request)
+
+            if message:
+                return message
+            # = = = = = = = = = = = = = = = = = = = = = = = =
 
             # Выполняется при выходе||кике пользователя - - -
             
@@ -88,6 +100,11 @@ class Handler(Settings):
                     return AC.onLeave(request)
 
             # - - - - - - - - - - - - - - - - - - - - - - - -
+
+        message = AC.onEveryMessage(request)
+
+        if message:
+            return message
 
         elif request.type == VkBotEventType.MESSAGE_NEW:
 
@@ -103,11 +120,13 @@ class Handler(Settings):
                 message_content: str = self.cutCommand(request.event.object['text']).split()
                 command: str = message_content.pop(0).lower()
                 args: list = message_content
-                
+
                 try:
-                    return eval("self.{}".format(self._keys[f'{command}'])).process(request, *args)
+                    if self._keys[str(command)][:4] == 'Game' and not(AC.getSettings(request, 'games')):
+                        return Samples.ERR_CHAT_GAMESOFF
+
+                    return eval("self.{}".format(self._keys[str(command)])).process(request, *args)
                 except TypeError:
                     return Samples.ERR_COMMAND_INVALIDARGUMENT
                 except KeyError as e:
-                    return e
-                #Samples.ERR_COMMAND_UNKNOWN
+                    return Samples.ERR_COMMAND_UNKNOWN

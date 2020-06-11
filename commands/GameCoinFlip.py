@@ -12,7 +12,7 @@ from random import randint
 
 class GameCoinFlip(Command, Settings):
 
-    key = 'кф'
+    key = ('кф', 'коинфлип', 'cf', 'coinflip')
     permissions = 3
 
     @classmethod

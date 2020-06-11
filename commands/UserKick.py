@@ -9,7 +9,7 @@ from AdminCommands.Admin import AdminCommands as AC
 
 class UserKick(Command, Settings):
 
-    key = 'кикнуть'
+    key = ('кикнуть',)
     permissions = 7
 
     @classmethod

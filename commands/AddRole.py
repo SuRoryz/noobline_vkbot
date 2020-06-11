@@ -5,7 +5,7 @@ from permissions import Permission
 
 class AddRole(Command):
 
-    key = 'роль'
+    key = ('роль', 'role')
     permissions = 9
 
     @classmethod

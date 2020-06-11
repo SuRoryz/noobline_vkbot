@@ -9,7 +9,7 @@ from AdminCommands.Admin import AdminCommands as AC
 
 class ChatUnwarn(Command, Settings):
     
-    key = 'анварн'
+    key = ('анварн', 'разварн', 'unwarn', 'анпред')
     permissions = 7
 
     @classmethod

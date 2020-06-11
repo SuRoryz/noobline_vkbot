@@ -6,7 +6,7 @@ from Settings import Settings
 
 class GetOnline(Command):
 
-    key = 'онлайн'
+    key = ('онлайн', 'online')
     permissions = 0
 
     @classmethod
@@ -27,10 +27,8 @@ class GetOnline(Command):
                     for profile in res['profiles']:
                         if profile['online']:
                             counter += 1
-                            message += Samples.COMMAND_ONLINE_USER.format(makeReference(profile['id'],
-                                                        profile['first_name'],
-                                                        profile['last_name']),
-                    Samples.COMMAND_ONLINE_MOBILE if 'is_mobile' in profile['online_info'].keys() else Samples.COMMAND_ONLINE_PC)
+                            message += Samples.COMMAND_ONLINE_USER.format(profile['first_name'], profile['last_name'],
+                                Samples.COMMAND_ONLINE_MOBILE if 'is_mobile' in profile['online_info'].keys() else Samples.COMMAND_ONLINE_PC)
 
                     message = Samples.COMMAND_ONLINE_TOTAL.format(counter) + message
                 except Exception as e:

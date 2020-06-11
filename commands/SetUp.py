@@ -5,7 +5,7 @@ from permissions import Permission
 
 class SetUp(Command):
 
-    key = 'обновить'
+    key = ('обновить',)
     permissions = 0
 
     @classmethod

@@ -12,7 +12,7 @@ from random import choices
 
 class GameCasino(Command, Settings):
 
-    key = 'казино'
+    key = ('казино', 'casino', 'cs', 'кз')
     permissions = 3
 
     @classmethod
@@ -44,10 +44,10 @@ class GameCasino(Command, Settings):
             
             result = choices(['к', 'ч', 'з', 'г'], [36, 36, 4, 1])[0]
 
-            multi = {'к': 2,
-                     'ч': 2,
-                     'з': 10,
-                     'г': 50}
+            multi = {'к': 1,
+                     'ч': 1,
+                     'з': 5,
+                     'г': 25}
 
             if result == 'ч':
                 result = 'чёрное'

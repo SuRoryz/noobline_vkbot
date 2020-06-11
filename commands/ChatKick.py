@@ -9,7 +9,7 @@ from AdminCommands.Admin import AdminCommands as AC
 
 class ChatKick(Command, Settings):
 
-    key = 'кик'
+    key = ('кик', 'kick')
     permissions = 7
 
     @classmethod

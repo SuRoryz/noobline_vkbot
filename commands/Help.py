@@ -5,7 +5,7 @@ from permissions import Permission
 
 class Help(Command):
 
-    key = 'помощь'
+    key = ('помощь', 'хелп', 'команды', 'help', 'commands')
     permissions = 0
 
     @classmethod

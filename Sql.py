@@ -49,7 +49,8 @@ class Sql(Settings):
                             'greeting': ('ntext', ''),
                             'rules': ('ntext', ''),
                             'warns': ('ntext', ''),
-                            'trade_rate': ('float', '')},
+                            'trade_rate': ('float', ''),
+                            'extra': ('ntext', '')},
                     'Games': {'coin_flip': ('ntext', '$game_cf_setup')}
                   }
 
@@ -110,6 +111,7 @@ class Sql(Settings):
                       'прикрепленным сообщением, текст которого будет '
                       'задан как правила.')
         warn_dict: dict = dumps({'warns': {}})
+        extra_dict: dict = dumps({'utils': {}})
 
         # тут переменные для гамесов
         game_cf_setup = dumps({'in_search': None, 'games_now': []})
@@ -132,7 +134,7 @@ class Sql(Settings):
                 if table == 'Admin':
                     if Sql.execute("select * from Admin", chat_id):
                         continue
-                    Sql.execute(f"insert into Admin (admins, kick_queue, greeting, rules, warns, trade_rate) values ('{admin_dict}', 0, '{greetings}', '{rules}', '{warn_dict}', 1.0)", chat_id)
+                    Sql.execute(f"insert into Admin (admins, kick_queue, greeting, rules, warns, trade_rate, extra) values ('{admin_dict}', 0, '{greetings}', '{rules}', '{warn_dict}', 1.0, '{extra_dict}')", chat_id)
                     continue
 
                 elif table == 'Games':

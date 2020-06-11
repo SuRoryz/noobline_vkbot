@@ -7,7 +7,7 @@ from permissions import Permission
 
 class AddNickname(Command):
 
-    key = 'ник'
+    key = ('ник', 'nick')
     permissions = 3
 
     @classmethod

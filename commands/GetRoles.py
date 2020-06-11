@@ -5,7 +5,7 @@ from permissions import Permission
 
 class GetRoles(Command):
 
-    key = 'роли'
+    key = ('роли', 'roles')
     permissions = 0
 
     @classmethod

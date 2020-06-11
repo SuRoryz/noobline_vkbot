@@ -6,7 +6,7 @@ from AdminCommands.Admin import AdminCommands as AC
 
 class MoneyTransfer(Command):
 
-    key = 'перевести'
+    key = ('перевести', 'перевод')
     permissions = 0
 
     @classmethod

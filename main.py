@@ -65,6 +65,7 @@ class Bot(Settings):
                                     keyboard=keyboard,
                                     attachment=attachment
                                 )
+
     # Слушаем Longpool. Это что-то вроде главного цикла
     async def eventListener(self) -> None:
         while True:
@@ -75,13 +76,6 @@ class Bot(Settings):
                 await asyncio.sleep(0)
             except Exception as e:
                 print(e)
-
-# Это класс запроса, именно его и принимает обработчик.
-class Request:
-    def __init__(self, _type, event: VkBotEventType, chat_id: int):
-        self.type = _type
-        self.event = event
-        self.chat_id = chat_id
 
 if __name__ == '__main__':
     c = Bot()
