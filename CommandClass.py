@@ -59,8 +59,9 @@ class Command:
     # Только для промежуточной отправки сообщений. Для готовых результатов
     # нужно возвращать их значение
     @classmethod
-    def sendMessage(message:str, chat_id:int,
+    def sendMessage(cls, message:str, chat_id:int,
                     keyboard:dict={}, attachment:str='') -> None:
+        print(type(chat_id))
         Settings.vk.messages.send(
                                 chat_id=chat_id,
                                 message=message,

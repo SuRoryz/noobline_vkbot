@@ -3,6 +3,8 @@ from Sql import Sql
 from Samples import Samples
 from permissions import Permission
 from Settings import Settings
+
+import requests
 from time import time
 from json import loads, dumps
 

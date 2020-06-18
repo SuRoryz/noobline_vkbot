@@ -10,7 +10,7 @@ from AdminCommands.Admin import AdminCommands as AC
 from json import loads, dumps
 from random import randint
 
-class Settings(Command, Settings):
+class SetSettings(Command, Settings):
 
     key = ('настройки',)
     permissions = 9
@@ -21,29 +21,19 @@ class Settings(Command, Settings):
         from_id = request.event.object['from_id']
 
         def parseSetting(setting, value=None):
-            settings_dict = {'sukablyat': 'Мат', 'мат': 'sukablyat',
-                              'games': 'Игры', 'игры': 'games',
-                             }
 
-            values_dict = {True: 'Вкл', 'вкл': True,
-                           False: 'Выкл', 'выкл': False}
-
-            black_list = ['protected']
-
-            if setting in black_list:
+            if setting in Settings.black_list:
                 return '', ''
             
             try:
-                setting = settings_dict[setting]
+                setting = Settings.settings_dict[setting]
             except:
                 pass
 
             try:
-                value = values_dict[value]
+                value = Settings.values_dict[value]
             except:
                 pass
-
-            print(setting, value)
 
             return setting, value
 
@@ -73,6 +63,6 @@ class Settings(Command, Settings):
                 pass
     
             AC.setSettings(request, *parseSetting(setting.lower(), value))
-            return Samples.SETTINGS_SUCCESS.format(*parseSetting(setting.lower(), settings[setting]))
+            return Samples.SETTINGS_SUCCESS.format(*parseSetting(setting.lower(),value))
 
         return work(setting, value)

@@ -68,11 +68,15 @@ class AdminCommands:
     @staticmethod
     def onBotJoin(request: Request) -> None:
         Sql.setUp(request.chat_id)
+        Sql.setUpUser(Settings.group_id, request.chat_id)
 
     # Вызывается при подключении пользователя.
     # Присылает заданное приветствие, либо приветствие по дефолту
     @staticmethod
     def onUserJoin(request: Request) -> str:
+        if AdminCommands.getSettings(request, 'antiraid'):
+            AdminCommands.kickUser(request, request.event.object.action['member_id'])
+            return 'Пользователь исключен, потому что включен режим антирейд'
         return Sql.execute("select greeting from Admin", request.chat_id)[0][0]
 
     # Вызывается при каждом сообщении.
@@ -103,18 +107,26 @@ class AdminCommands:
                 AdminCommands.kickUser(request, from_id)
                 return Samples.CHAT_BANNEDJOIN
 
+        if AdminCommands.getSettings(request, 'stats'):
+            AdminCommands.countStat(request)
+
     # Получаем настройки беседы
     @staticmethod
     def getSettings(request: Request, setting=None, full=False):
-        default_values = {'sukablyat': False,
-                          'games': True,
-                          'protected': [],
-                          }
 
         extra = loads(Sql.execute("select extra from Admin", request.chat_id)[0][0])
+        
         if not('settings' in extra['utils'].keys()):
-            settings = default_values
+            settings = Settings.default_values
+        elif len(extra['utils']['settings']) == len(Settings.default_values):
+            settings = extra['utils']['settings']
         else:
+            for setting in Settings.default_values.keys():
+                try:
+                    extra['utils']['settings'][setting]
+                except:
+                    extra['utils']['settings'][setting] = Settings.default_values[setting]
+
             settings = extra['utils']['settings']
 
         if full:
@@ -123,7 +135,7 @@ class AdminCommands:
         try:
             return settings[setting]
         except:
-            return default_values[setting]
+            return Settings.default_values[setting]
 
     # Выставляем настройки беседы
     def setSettings(request: Request, setting: str, value: bool) -> None:
@@ -157,10 +169,11 @@ class AdminCommands:
     def warnUser(request: Request, target: int, chat_id: int) -> str:
         warn_dict: dict = loads(Sql.execute("select warns from Admin", chat_id)[0][0])
         target = str(target)
+        warn_limit = int(AdminCommands.getSettings(request, 'warns'))
 
         if target in warn_dict['warns'].keys():
             warns_now = warn_dict['warns'][target]
-            if warns_now == 2:
+            if warns_now == warn_limit-1:
                 AdminCommands.kickUser(request, int(target))
                 AdminCommands.unwarnUser(request, int(target))
                 warn_dict['warns'][target] += 1
@@ -171,20 +184,21 @@ class AdminCommands:
 
         warns_now = warn_dict['warns'][target]
         warn_dict = dumps(warn_dict)
-        if warns_now != 3:
+        if warns_now != warn_limit:
             Sql.execute(f"update Admin set warns='{warn_dict}'", chat_id)
-        return Samples.ADMIN_WARN.format(Samples.getReference(target, chat_id), warns_now)
+        return Samples.ADMIN_WARN.format(Samples.getReference(target, chat_id), warns_now, warn_limit, warn_limit)
 
     # Устанавливает количество варнов на 0
     @staticmethod
     def unwarnUser(request: Request, target: int) -> str:
         warn_dict: dict = loads(Sql.execute("select warns from Admin", request.chat_id)[0][0])
         target = str(target)
+        warn_limit = int(AdminCommands.getSettings(request, 'warns'))
 
         warn_dict['warns'][target] = 0
         warn_dict = dumps(warn_dict)
         Sql.execute(f"update Admin set warns='{warn_dict}'", request.chat_id)
-        return Samples.ADMIN_WARN_NULL.format(Samples.getReference(target, request.chat_id))
+        return Samples.ADMIN_WARN_NULL.format(Samples.getReference(target, request.chat_id), warn_limit, warn_limit)
 
     # Кикает цель из беседы. Попутно снимает варны
     @staticmethod
@@ -227,6 +241,85 @@ class AdminCommands:
         except:
             pass
         extra['utils']['bans'] = now_banned
+
+        extra = dumps(extra)
+        Sql.execute(f"update Admin set extra='{extra}'", request.chat_id)
+
+    # Записываем статистку сообщения в общую
+    @staticmethod
+    def countStat(request: Request) -> None:
+
+        stats = {
+                'overall': {},
+                'users': {}
+                }
+
+        default_user_stats = {
+                            'messages': 0,
+                            'words': 0,
+                            'sukablyat': 0,
+                            'chars': 0
+                            }
+        
+        extra = loads(Sql.execute("select extra from Admin", request.chat_id)[0][0])
+
+        from_id = request.event.object.from_id
+        text = request.event.object.text
+
+        if 'stats' not in extra['utils'].keys():
+            
+            _stats = default_user_stats
+
+            _stats['messages'] += 1
+            _stats['words'] += len(text.split())
+            _stats['chars'] += len(text)
+            _stats['sukablyat'] += len(
+                    [word for word in [word in Settings.SUKABLYAT for word in text
+                                            .replace('?', '')
+                                            .replace('!', '')
+                                            .replace('.', '')
+                                            .replace(',', '')
+                                            .split()] if word]
+                                        )
+
+            stats['users'][str(from_id)] = _stats
+
+        else:
+            stats = extra['utils']['stats']
+            if str(from_id) not in stats['users'].keys():
+                _stats = default_user_stats
+
+                _stats['messages'] += 1
+                _stats['words'] += len(text.split())
+                _stats['chars'] += len(text)
+                _stats['sukablyat'] += len(
+                        [word for word in [word in Settings.SUKABLYAT for word in text
+                                                .replace('?', '')
+                                                .replace('!', '')
+                                                .replace('.', '')
+                                                .replace(',', '')
+                                                .split()] if word]
+                                            )
+
+                stats['users'][str(from_id)] = _stats
+
+            else:
+                _stats = stats['users'][str(from_id)]
+
+                _stats['messages'] += 1
+                _stats['words'] += len(text.split())
+                _stats['chars'] += len(text)
+                _stats['sukablyat'] += len(
+                        [word for word in [word in Settings.SUKABLYAT for word in text
+                                                .replace('?', '')
+                                                .replace('!', '')
+                                                .replace('.', '')
+                                                .replace(',', '')
+                                                .split()] if word]
+                                            )
+                
+            
+        extra['utils']['stats'] = stats
 
         extra = dumps(extra)
         Sql.execute(f"update Admin set extra='{extra}'", request.chat_id)

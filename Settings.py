@@ -10,15 +10,17 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType, VkBotMessageEvent
 \==---=-------------+------------- -------  ----   -   -"""
 
 
+
 class Settings:
 
     # Айди группы
-    group_id =
+    group_id = 
 
     # Логинимся в вк
     session = requests.Session()
-    vk_session = vk_api.VkApi(token='ТУТ ТОКЕН ГРУППЫ')
+    vk_session = vk_api.VkApi(token='токен')
     longpoll = VkBotLongPoll(vk_session, group_id)
+    print(longpoll.ts)
     vk = vk_session.get_api()
 
     # Настройки
@@ -29,3 +31,26 @@ class Settings:
     SUKABLYAT = ['хуй', 'бля', 'ебанный', 'ебаный', 'блять', 'блядь',
                  'пизда', 'ебать', 'сука', 'пидарас', 'хуйло', 'хуйня',
                  'чмо', 'пиздабол', 'охуеть', 'пиздато', 'хуйхуй']
+
+    default_values = {'sukablyat': False,
+                      'games': True,
+                      'protected': [],
+                      'antiraid': False,
+                      'warns': 3,
+                      'stats': True
+                      }
+
+    settings_dict = {'sukablyat': 'Мат', 'мат': 'sukablyat',
+                    'games': 'Игры', 'игры': 'games',
+                     'antiraid': 'Антирейд', 'антирейд': 'antiraid',
+                     'warns': 'Варны', 'варны': 'warns',
+                     'stats': 'Статистика', 'статистика': 'stats'}
+
+    values_dict = {True: 'Вкл', 'вкл': True,
+                           False: 'Выкл', 'выкл': False}
+
+    black_list = ['protected']
+
+    
+
+    
