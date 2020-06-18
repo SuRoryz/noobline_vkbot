@@ -30,9 +30,17 @@ class GetTop(Command):
                 chat_ids.append(int(db[:-3]))
 
             for chat_id in chat_ids:
-                chat_users = Sql.execute("select user, money from Economy", chat_id)
-                chat_name = Settings.vk.messages.getConversationsById(peer_ids=2000000000+chat_id)['items'][0]['chat_settings']['title']
+                print(chat_id)
+                
+                try:
+                    chat_users = Sql.execute("select user, money from Economy", chat_id)
+                    chat_name = Settings.vk.messages.getConversationsById(peer_ids=2000000000+chat_id)['items'][0]['chat_settings']['title']
+                except:
+                    continue
 
+                if not(chat_users):
+                    continue
+                
                 for user in chat_users:
                     if str(user[0]) in users.keys():
                         print(1)
@@ -43,14 +51,14 @@ class GetTop(Command):
                     else:
                         users[str(user[0])] = (user[1], chat_name, chat_id)
 
-            top = sorted(users.items(), key=lambda user: user[1][0], reverse=True)[offset:10]
+            top = sorted(users.items(), key=lambda user: user[1][0], reverse=True)[offset:10+offset]
 
             print(top)
 
             message = Samples.COMMAND_GETTOP_START
 
             for user in top:
-                message += Samples.COMMAND_GETTOP_TOP.format(top.index(user)+1,
+                message += Samples.COMMAND_GETTOP_TOP.format(top.index(user)+1+offset,
                                                      Samples.getReference(int(user[0]), user[1][2]),
                                                      user[1][0],
                                                      user[1][1])
