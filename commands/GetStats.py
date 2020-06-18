@@ -39,7 +39,7 @@ class GetStats(Command):
                     chars += stats[user]['chars']
                     sukablyat += stats[user]['sukablyat']
                     
-            return Samples.COMMAND_GETSTAT_STATS.format(stats[str(from_id)]["messages"], messages,
+            return Samples.COMMAND_GETSTATS_STATS.format(stats[str(from_id)]["messages"], messages,
                                                         stats[str(from_id)]["words"], words,
                                                         stats[str(from_id)]["chars"], chars,
                                                         stats[str(from_id)]["sukablyat"], sukablyat)
