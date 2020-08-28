@@ -58,6 +58,7 @@ class Bot(Settings):
                 message = result
                                 
         if event.from_chat:
+            try:
                 self.vk.messages.send(
                                     chat_id=event.chat_id,
                                     message=message,
@@ -65,6 +66,8 @@ class Bot(Settings):
                                     keyboard=keyboard,
                                     attachment=attachment
                                 )
+            except:
+                pass
 
     # Слушаем Longpool. Это что-то вроде главного цикла
     async def eventListener(self) -> None:

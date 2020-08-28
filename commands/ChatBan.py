@@ -17,9 +17,13 @@ class ChatBan(Command, Settings):
 
     @classmethod
     def process(cls, request, target='', *args):
+        if not(args):
+            args = list()
 
         target_ = cls.parseTargetFromFWDM(request)
         if target_:
+            if target_:
+                args.insert(0, target)
             target = target_
             
         target = cls.parseTarget(target)

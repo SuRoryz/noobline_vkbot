@@ -43,7 +43,7 @@ class Samples:
                             '\n !Варнлист'
                             '\n !Банлист')
 
-    SETTINGS_CURRENT = 'Текущие настройки для беседы:\n' # NEW
+    SETTINGS_CURRENT = '⚙ Текущие настройки для беседы:\n' # NEW
 
     SETTINGS_NOPARAM = 'Данного параметра не существует' # NEW
 

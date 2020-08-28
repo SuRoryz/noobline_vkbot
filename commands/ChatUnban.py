@@ -28,9 +28,9 @@ class ChatUnban(Command, Settings):
             if target:
                 try:
                     AC.unbanUser(request, target)
-                    return Samples.CHAT_UNBAN_SUCCESS
-                except:
-                    return Samples.ERR_COMMAND_CHATUNBAN_ERR
+                    return Samples.COMMAND_CHATUNBAN_SUCCESS
+                except Exception as e:
+                    return e#Samples.ERR_COMMAND_CHATUNBAN_ERR
 
             return Samples.COMMAND_INVALIDUSER
 

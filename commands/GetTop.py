@@ -26,8 +26,12 @@ class GetTop(Command):
             chat_ids = list()
             users = dict()
 
+            print('gay')
             for db in chats:
-                chat_ids.append(int(db[:-3]))
+                try:
+                    chat_ids.append(int(db[:-3]))
+                except:
+                    pass
 
             for chat_id in chat_ids:
                 print(chat_id)
@@ -58,6 +62,7 @@ class GetTop(Command):
             message = Samples.COMMAND_GETTOP_START
 
             for user in top:
+                #if user[0]:
                 message += Samples.COMMAND_GETTOP_TOP.format(top.index(user)+1+offset,
                                                      Samples.getReference(int(user[0]), user[1][2]),
                                                      user[1][0],

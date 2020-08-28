@@ -83,7 +83,7 @@ class Command:
                         return function(*args)
                     return Samples.ERR_PERMS_DENIED
                 except Exception as e:
-                    return Samples.ERR_UNKNOWN
+                    return e#Samples.ERR_UNKNOWN
 
             return wrap_args
         return wrap

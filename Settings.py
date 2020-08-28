@@ -10,17 +10,15 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType, VkBotMessageEvent
 \==---=-------------+------------- -------  ----   -   -"""
 
 
-
 class Settings:
 
     # Айди группы
-    group_id = 
+    group_id = 0
 
     # Логинимся в вк
     session = requests.Session()
-    vk_session = vk_api.VkApi(token='токен')
+    vk_session = vk_api.VkApi(token='')
     longpoll = VkBotLongPoll(vk_session, group_id)
-    print(longpoll.ts)
     vk = vk_session.get_api()
 
     # Настройки
@@ -50,7 +48,3 @@ class Settings:
                            False: 'Выкл', 'выкл': False}
 
     black_list = ['protected']
-
-    
-
-    

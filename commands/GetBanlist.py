@@ -29,7 +29,7 @@ class GetBanlist(Command):
             message = Samples.COMMAND_BANLIST_START
 
             for ban in ban_dict.keys():
-                message += Samples.COMMAND_BANLISR_BANS.format(Samples.getReference(ban, request.chat_id),
+                message += Samples.COMMAND_BANLIST_BANS.format(Samples.getReference(ban, request.chat_id),
                                              cls.timeDifference(round(time()), ban_dict[ban]))
 
             return message
