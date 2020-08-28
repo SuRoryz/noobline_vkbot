@@ -1,2 +1,3 @@
 # noobline_vkbot
-Бот для вк
+readme soon
+
